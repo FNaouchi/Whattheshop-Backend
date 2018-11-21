@@ -28,17 +28,30 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
+
 class ItemTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemType
         fields = ["name"]
 
 
+
+class BiddingSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Bidding
+        fields = ["user","amount"]
+
+
 class ItemListSerializer(serializers.ModelSerializer):
     item_type = ItemTypeSerializer()
+    biddings = BiddingSerializer(many=True, read_only=True)
+
     class Meta:
         model = Item
-        fields = ["name","description","end_date","item_type","logo"]
+        fields = ["name","description","end_date","item_type","logo", "biddings"]
+
+
 
 
 class BiddingListSerializer(serializers.ModelSerializer):
