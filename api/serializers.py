@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Item, Bidding, ItemType
+from .models import Item, Bidding, ItemType, Category
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -29,10 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 
-class ItemTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ItemType
-        fields = ["name"]
 
 
 
@@ -44,14 +40,18 @@ class BiddingSerializer(serializers.ModelSerializer):
 
 
 class ItemListSerializer(serializers.ModelSerializer):
-    item_type = ItemTypeSerializer()
-    biddings = BiddingSerializer(many=True, read_only=True)
+    biddings = BiddingSerializer(many=True)
 
     class Meta:
         model = Item
-        fields = ["name","description","end_date","item_type","logo", "biddings"]
+        exclude = ['item_type']
 
 
+class ItemTypeSerializer(serializers.ModelSerializer):
+    items = ItemListSerializer(many=True)
+    class Meta:
+        model = ItemType
+        exclude = ['category']
 
 
 class BiddingListSerializer(serializers.ModelSerializer):
@@ -60,3 +60,10 @@ class BiddingListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bidding
         fields = ["user","amount","item"]
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    item_types = ItemTypeSerializer(many=True)
+    class Meta:
+        model = Category
+        fields = '__all__'
