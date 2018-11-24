@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Item, Bidding, ItemType, Category
+from .models import Item, Bidding, ItemType, Category, Profile
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -28,30 +28,46 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'location', 'birth_date', 'profile_picture']
 
 
+class FullUserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email',
+                   "profile"]
 
 
 class BiddingSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Bidding
-        fields = ["user","amount"]
+        fields = ["amount", "user"]
 
+
+class ItemDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Item
+        fields = ["id","name","end_date", "logo"]
 
 class ItemListSerializer(serializers.ModelSerializer):
     biddings = BiddingSerializer(many=True)
 
     class Meta:
         model = Item
-        exclude = ['item_type']
+        fields = ["id","name","description", "end_date", "logo", "biddings"]
 
 
 class ItemTypeSerializer(serializers.ModelSerializer):
-    items = ItemListSerializer(many=True)
+    items = ItemDetailSerializer(many=True)
     class Meta:
         model = ItemType
-        exclude = ['category']
+        fields = ["id","name","items"]
 
 
 class BiddingListSerializer(serializers.ModelSerializer):
@@ -66,4 +82,4 @@ class CategorySerializer(serializers.ModelSerializer):
     item_types = ItemTypeSerializer(many=True)
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ["id","name","item_types"]
