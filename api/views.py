@@ -22,7 +22,7 @@ class BiddingListAPIView(ListAPIView):
 class ItemsDetailAPIView(RetrieveAPIView):
 	
 	queryset = Item.objects.all()
-	serializer_class = ItemDetailSerializer
+	serializer_class = ItemListSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'object_id'
 

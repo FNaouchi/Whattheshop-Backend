@@ -34,26 +34,32 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['bio', 'location', 'birth_date', 'profile_picture']
 
 
-class FullUserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email',
-                   "profile"]
-
-
 class BiddingSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Bidding
         fields = ["amount", "user"]
 
-
 class ItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
         fields = ["id","name","end_date", "logo"]
+
+class ProfileBiddingSerializer(serializers.ModelSerializer):
+    item = ItemDetailSerializer()
+    class Meta:
+        model = Bidding
+        fields = ["amount", "item"]
+
+class FullUserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+    biddings = ProfileBiddingSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email',
+                   "profile", "biddings"]
+
 
 class ItemListSerializer(serializers.ModelSerializer):
     biddings = BiddingSerializer(many=True)
@@ -67,7 +73,7 @@ class ItemTypeSerializer(serializers.ModelSerializer):
     items = ItemDetailSerializer(many=True)
     class Meta:
         model = ItemType
-        fields = ["id","name","items"]
+        fields = ["id","name", "logo" ,"items"]
 
 
 class BiddingListSerializer(serializers.ModelSerializer):
@@ -82,4 +88,4 @@ class CategorySerializer(serializers.ModelSerializer):
     item_types = ItemTypeSerializer(many=True)
     class Meta:
         model = Category
-        fields = ["id","name","item_types"]
+        fields = ["id","name", "logo","item_types"]

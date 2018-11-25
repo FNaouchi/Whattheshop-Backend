@@ -6,13 +6,14 @@ from django.dispatch import receiver
 
 class Category(models.Model):
     name = models.CharField(max_length=120)
-    
+    logo = models.ImageField(upload_to='event_logos', null=True, blank=True)
     def __str__(self):
         return self.name
 
 class ItemType(models.Model):
     name = models.CharField(max_length=120)
     category = models.ForeignKey(Category, related_name='item_types', on_delete=models.CASCADE)
+    logo = models.ImageField(upload_to='event_logos', null=True, blank=True)
     def __str__(self):
         return self.name
 
@@ -27,7 +28,7 @@ class Item(models.Model):
         return self.name
 
 class Bidding(models.Model):
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    user = models.ForeignKey(User,  related_name='biddings', default=1, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=20, decimal_places=3)
     item = models.ForeignKey(Item, related_name='biddings', on_delete=models.CASCADE)
     
