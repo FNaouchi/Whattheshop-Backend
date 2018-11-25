@@ -44,7 +44,7 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ["id","name","end_date", "logo"]
+        fields = ["id","name","description","end_date", "logo"]
 
 class ProfileBiddingSerializer(serializers.ModelSerializer):
     item = ItemDetailSerializer()
