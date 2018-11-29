@@ -1,5 +1,5 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
-from .serializers import UserCreateSerializer, ItemListSerializer, BiddingListSerializer, CategorySerializer, ItemDetailSerializer, FullUserSerializer
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from .serializers import UserCreateSerializer, ItemListSerializer, BiddingListSerializer, CategorySerializer, ItemDetailSerializer, FullUserSerializer, BiddingCreateSerializer, UpdateFullUserSerializer
 from .models import Item, Bidding, Category, User
 
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -31,5 +31,19 @@ class ProfileAPIView(RetrieveAPIView):
 
 	queryset = User.objects.all()
 	serializer_class = FullUserSerializer
+	lookup_field = 'id'
+	lookup_url_kwarg = 'object_id'
+
+
+class BiddingCreateView(CreateAPIView):
+	serializer_class = BiddingCreateSerializer
+	permission_classes = [IsAuthenticated]
+	def perform_create(self, serializer):
+		serializer.save(user=self.request.user, item=Item.objects.get(id=self.kwargs['object_id']))
+
+
+class ProfileUpdateView(UpdateAPIView):
+	queryset = User.objects.all()
+	serializer_class = UpdateFullUserSerializer
 	lookup_field = 'id'
 	lookup_url_kwarg = 'object_id'

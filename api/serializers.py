@@ -44,7 +44,7 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ["id","name","description","end_date", "logo"]
+        fields = ["id","name","description", "duration", "starting_price","end_date", "logo"]
 
 class ProfileBiddingSerializer(serializers.ModelSerializer):
     item = ItemDetailSerializer()
@@ -60,13 +60,19 @@ class FullUserSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'email',
                    "profile", "biddings"]
 
+class UpdateFullUserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email',
+                   "profile"]
 
 class ItemListSerializer(serializers.ModelSerializer):
     biddings = BiddingSerializer(many=True)
 
     class Meta:
         model = Item
-        fields = ["id","name","description", "end_date", "logo", "biddings"]
+        fields = ["id","name","description", "duration", "starting_price", "end_date", "logo", "biddings"]
 
 
 class ItemTypeSerializer(serializers.ModelSerializer):
@@ -83,6 +89,11 @@ class BiddingListSerializer(serializers.ModelSerializer):
         model = Bidding
         fields = ["user","amount","item"]
 
+class BiddingCreateSerializer(serializers.ModelSerializer):
+    item = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Bidding
+        fields = ["amount","item"]
 
 class CategorySerializer(serializers.ModelSerializer):
     item_types = ItemTypeSerializer(many=True)

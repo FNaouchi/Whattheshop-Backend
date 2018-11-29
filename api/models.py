@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.db.models import DurationField
+from datetime import timedelta
 class Category(models.Model):
     name = models.CharField(max_length=120)
     logo = models.ImageField(upload_to='event_logos', null=True, blank=True)
@@ -21,6 +22,8 @@ class Item(models.Model):
     name = models.CharField(max_length=120)
     description = models.TextField()
     end_date = models.DateTimeField()
+    duration = models.DurationField(default=timedelta())
+    starting_price = models.DecimalField(max_digits=20, decimal_places=3)
     item_type = models.ForeignKey(ItemType, related_name='items', on_delete=models.CASCADE)
     logo = models.ImageField(upload_to='event_logos', null=True, blank=True)
 
