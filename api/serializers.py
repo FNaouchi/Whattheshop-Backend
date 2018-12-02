@@ -22,12 +22,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username']
-
-
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -35,13 +29,16 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class BiddingSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = serializers.SerializerMethodField()
+
     class Meta:
         model = Bidding
         fields = ["amount", "user"]
 
-class ItemDetailSerializer(serializers.ModelSerializer):
+    def get_user(self, obj):
+        return obj.user.username
 
+class ItemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ["id","name","description", "duration", "starting_price","end_date", "logo"]
@@ -72,7 +69,7 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ["id","name","description", "duration", "starting_price", "end_date", "logo", "biddings"]
+        fields = ["id","name","description", "duration", "starting_price", "highest_bid" , "end_date", "logo", "biddings"]
 
 
 class ItemTypeSerializer(serializers.ModelSerializer):
@@ -83,11 +80,14 @@ class ItemTypeSerializer(serializers.ModelSerializer):
 
 
 class BiddingListSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = serializers.SerializerMethodField()
     item = ItemListSerializer()
     class Meta:
         model = Bidding
         fields = ["user","amount","item"]
+
+    def get_user(self, obj):
+        return obj.user.username
 
 class BiddingCreateSerializer(serializers.ModelSerializer):
     item = serializers.PrimaryKeyRelatedField(read_only=True)
