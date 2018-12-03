@@ -41,7 +41,7 @@ class BiddingSerializer(serializers.ModelSerializer):
 class ItemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ["id","name","description", "duration", "starting_price","end_date", "logo"]
+        fields = ["id","name","description", "duration", "starting_price", "highest_bid" ,"end_date", "logo"]
 
 class ProfileBiddingSerializer(serializers.ModelSerializer):
     item = ItemDetailSerializer()
