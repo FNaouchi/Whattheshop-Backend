@@ -26,7 +26,7 @@ SECRET_KEY = '+sb2j2pxmv^i(xvyt8wjc0l5pe*0c@$nqh3d7@u%&f)+2(mg=v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['104.248.37.122']
+ALLOWED_HOSTS = ['127.0.0.1','104.248.37.122']
 
 
 # Application definition
@@ -80,10 +80,21 @@ WSGI_APPLICATION = 'wtshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.postgresql_psycopg2'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.postgresql_psycopg2'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': '7c8128f34a2b513c248f3c87e3e07a74',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
